@@ -41,14 +41,13 @@ For example, this:
 
 Would strip this from files:
 
-```html
-~~~
-title: I'm still front-matter
-description: Tilde's are people too!
-~~~
+    ~~~
+    title: I'm still front-matter
+    description: Tilde's are people too!
+    ~~~
 
-<h1>Not me though, I wouldn't be stripped.</h1>
-```
+    <h1>Not me though, I wouldn't be stripped.</h1>
+
 
 ## Example usage
 
