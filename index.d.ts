@@ -1,6 +1,6 @@
-const antimatter: (
+const nomatter: (
   content: string,
   options?: { open?: string; close?: string }
 ) => string;
 
-export = antimatter;
+export = nomatter;
