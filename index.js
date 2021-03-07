@@ -8,8 +8,20 @@
 
 'use strict';
 
-var yfm = require('yfm');
+function antimatter(content, { open = '---', close = open } = {}) {
+  const openRE = new RegExp('^\\n*' + open + '\\n', 'g');
+  const closeRE = new RegExp('\\n' + close + '(\\n\\s*|$)', 'g');
 
-module.exports = function (src, options) {
-  return yfm(src, options).content.replace(/^\s+/, '');
-};
+  let match = openRE.exec(content);
+  if (match) {
+    closeRE.lastIndex = openRE.lastIndex - 1;
+    match = closeRE.exec(content);
+    if (match) {
+      return content.slice(closeRE.lastIndex);
+    }
+  }
+
+  return content;
+}
+
+module.exports = antimatter;
