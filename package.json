@@ -21,6 +21,10 @@
     }
   ],
   "main": "index.js",
+  "files": [
+    "index.*",
+    "bower.json"
+  ],
   "engines": {
     "node": ">= 0.8.0"
   },
