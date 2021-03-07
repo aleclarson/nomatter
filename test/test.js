@@ -8,26 +8,45 @@
 
 'use strict';
 
-// Node.js
-var path = require('path');
+const { readFileSync } = require('fs');
 
-// node_modules
-var expect = require('chai').expect;
-var file = require('fs-utils');
+const antimatter = require('../');
 
-var antimatter = require('../');
-
-
-describe('antimatter:', function () {
-  it('should obliterate YAML front matter causing the wormhole in the gamma quadrant to collapse for all eternity.', function () {
-    var actual = antimatter('./test/fixtures/default.md');
-    var expected = '# This shouldn\'t be removed.';
-    expect(actual).to.eql(expected);
+describe('antimatter', () => {
+  it('works with no front matter', () => {
+    expect(antimatter('a')).toBe('a');
   });
 
-  it('should obliterate YAML front matter causing the wormhole in the gamma quadrant to collapse for all eternity.', function () {
-    var actual = antimatter('./test/fixtures/custom.md', {open: '~~~', close: '~~~'});
-    var expected = '# This shouldn\'t be removed.';
-    expect(actual).to.eql(expected);
+  it('bails if front matter is unclosed', () => {
+    expect(antimatter('---\n')).toBe('---\n');
+  });
+
+  it('works with empty front matter', () => {
+    expect(antimatter('---\n---\na')).toBe('a');
+  });
+
+  it('allows empty lines before front matter', () => {
+    expect(antimatter('\n\n---\na: b\n---\na')).toBe('a');
+  });
+
+  it('removes empty lines after front matter', () => {
+    expect(antimatter('---\na: b\n---\n\n\na')).toBe('a');
+  });
+
+  it('works with non-empty front matter', () => {
+    const content = readFileSync('./test/fixtures/default.md', 'utf-8');
+    expect(antimatter(content)).toBe("# This shouldn't be removed.");
+  });
+
+  it('works with custom delimiters', () => {
+    const content = readFileSync('./test/fixtures/custom.md', 'utf-8');
+    const actual = antimatter(content, { open: '~~~', close: '~~~' });
+    expect(actual).toBe("# This shouldn't be removed.");
+  });
+
+  it('assumes the close delimiter from open', () => {
+    const content = readFileSync('./test/fixtures/custom.md', 'utf-8');
+    const actual = antimatter(content, { open: '~~~' });
+    expect(actual).toBe("# This shouldn't be removed.");
   });
 });
